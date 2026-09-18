@@ -18,6 +18,8 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdio.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
@@ -125,10 +127,10 @@ void StartPIDRegulator(void *argument)
     if (last_position != position)
     {
       position = last_position;
-      _write()
+      printf("%ld", position);
     }
 
-    osDelay(10);
+    osDelay(100);
   }
   /* USER CODE END StartDefaultTask */
 }
