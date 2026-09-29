@@ -24,7 +24,10 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
+#include "global_vars.h"
 #include "tim.h"
+#include " pid/pid_calculator.h"
+#include "hardware/motor.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -48,9 +51,16 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-osThreadId_t pidRegulatorHandle;
-const osThreadAttr_t pidRegulator_attributes = {
-  .name = "pidRegulator",
+osThreadId_t pidTargetHandle;
+const osThreadAttr_t pidTarget_attributes = {
+  .name = "pidTarget",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+
+osThreadId_t pidTaskHandle;
+const osThreadAttr_t pidTask_attributes = {
+  .name = "pidTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -63,7 +73,8 @@ const osThreadAttr_t pidRegulator_attributes = {
 
 /* USER CODE END FunctionPrototypes */
 
-void StartPIDRegulator(void *argument);
+void StartPIDTarget(void *argument);
+void StartPIDTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -98,7 +109,8 @@ void MX_FREERTOS_Init(void) {
 
 
   /* USER CODE BEGIN RTOS_THREADS */
-  pidRegulatorHandle = osThreadNew(StartPIDRegulator, NULL, &pidRegulator_attributes);
+  pidTargetHandle = osThreadNew(StartPIDTarget, NULL, &pidTarget_attributes);
+  pidTaskHandle = osThreadNew(StartPIDTask, NULL, &pidTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -108,32 +120,31 @@ void MX_FREERTOS_Init(void) {
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartPIDRegulator(void *argument)
+void StartPIDTarget(void *argument)
 {
-  int32_t last_position = 0;
-  int32_t position = 0;
-  /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
   for(;;)
   {
-    position = __HAL_TIM_GET_COUNTER(&htim2);
-
-    if (last_position != position)
-    {
-      position = last_position;
-      printf("%ld", position);
-    }
-
-    osDelay(100);
+    g_target = g_target == (int8_t)45 ? (int8_t)-45 : (int8_t)45;
+    osDelay(3000);
   }
   /* USER CODE END StartDefaultTask */
 }
+
+void StartPIDTask(void *argument)
+{
+  PID_Init(2, 0, 0, 0.01f, -100, 100);
+  Motor_Init();
+  for(;;)
+  {
+    float u = PID_Update(g_target, __HAL_TIM_GET_COUNTER(&htim2));
+    Motor_SetOutput(u);
+
+    osDelay(10);
+  }
+  /* USER CODE END StartDefaultTask */
+}
+/* USER CODE END Header_StartDefaultTask */
+
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */

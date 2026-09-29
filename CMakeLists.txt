@@ -28,11 +28,19 @@ set(CMAKE_SYSTEM_NAME Generic)
 
 # Core project settings
 project(${CMAKE_PROJECT_NAME})
+message(STATUS "Toolchain file: ${CMAKE_TOOLCHAIN_FILE}")
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
 # Enable CMake support for ASM and C languages
 enable_language(C ASM)
 
+add_executable(${CMAKE_PROJECT_NAME}
+        Core/Inc/global_vars.h
+        Core/Src/global_vars.c
+        "Core/Src/ pid/pid_calculator.c"
+        "Core/Src/ pid/pid_calculator.h"
+        Core/Src/hardware/motor.c
+        Core/Src/hardware/motor.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
