@@ -37,10 +37,22 @@ enable_language(C ASM)
 add_executable(${CMAKE_PROJECT_NAME}
         Core/Inc/global_vars.h
         Core/Src/global_vars.c
-        "Core/Src/ pid/pid_calculator.c"
-        "Core/Src/ pid/pid_calculator.h"
+        "Core/Src/pid/pid_calculator.c"
+        "Core/Src/pid/pid_calculator.h"
         Core/Src/hardware/motor.c
-        Core/Src/hardware/motor.h)
+        Core/Src/hardware/motor.h
+        Core/Src/hardware/encoder.c
+        Core/Src/hardware/encoder.h
+        Core/Src/calibration/calibration.c
+        Core/Src/calibration/calibration.h
+        Core/Src/calibration/calibration_logger.c
+        Core/Src/calibration/calibration_logger.h
+        Core/Src/calibration/static_compensation.c
+        Core/Src/calibration/static_compensation.h
+        Core/Src/pid/position_controller.c
+        Core/Src/pid/position_controller.h
+        Core/Inc/global_funcs.h
+        Core/Src/global_funcs.c)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
@@ -57,7 +69,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined include paths
+        Core/Src/pid
+        Core/Src
 )
 
 # Add project symbols (macros)

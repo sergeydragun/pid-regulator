@@ -6,6 +6,9 @@
 #define PID_REGULATOR_GLOBAL_VARS_H
 #include <stdint.h>
 
-extern volatile int8_t g_target;
+extern volatile int32_t g_max_pos;
+extern volatile int32_t g_min_pos;
+
+extern volatile int32_t g_target;
 
 #endif //PID_REGULATOR_GLOBAL_VARS_H

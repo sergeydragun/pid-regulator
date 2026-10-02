@@ -4,6 +4,7 @@
 
 #ifndef PID_REGULATOR_PID_CALCULATOR_H
 #define PID_REGULATOR_PID_CALCULATOR_H
+#include <stdint.h>
 
 void PID_Init(float kp,
               float ki,
@@ -12,7 +13,7 @@ void PID_Init(float kp,
               float output_min,
               float output_max);
 
-float PID_Update(float target, float measurement);
+float PID_Update(int32_t target, int32_t measurement);
 
 void PID_Reset(void);
 

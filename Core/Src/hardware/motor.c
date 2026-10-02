@@ -39,7 +39,7 @@ void Motor_SetOutput(float output)
 {
     uint32_t duty = output_to_ccr(output);
 
-    if (output > 0.0f)
+    if (output < 0.0f)
     {
         __HAL_TIM_SET_COMPARE(
             &htim1,
@@ -53,7 +53,7 @@ void Motor_SetOutput(float output)
             0
         );
     }
-    else if (output < 0.0f)
+    else if (output > 0.0f)
     {
         __HAL_TIM_SET_COMPARE(
             &htim1,
