@@ -7,7 +7,7 @@
 #include "global_funcs.h"
 #include "logger/logger.h"
 
-void ADRC_Init(volatile ADRC_t* adrc, float wo, float b, float kp, float kd, float dt, float initial_pos)
+void ADRC_Init(volatile ADRC_t* adrc, float wo, float b, float kp, float kd, float dt, int32_t initial_pos)
 {
     adrc->wo = wo;
     adrc->b = b;
@@ -24,7 +24,7 @@ void ADRC_Init(volatile ADRC_t* adrc, float wo, float b, float kp, float kd, flo
     adrc->beta3 = wo * wo * wo;
 }
 
-float ADRC_Update(volatile ADRC_t* adrc, float target, float current_pos)
+float ADRC_Update(volatile ADRC_t* adrc, float target, int32_t current_pos)
 {
     float e = adrc->x1_hat - current_pos;
 

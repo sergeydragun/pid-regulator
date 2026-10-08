@@ -174,9 +174,9 @@ void StartPIDTarget(void *argument)
 {
   for (;;)
   {
-    g_target = (g_target == (int8_t)45)
-                   ? (int8_t)-45
-                   : (int8_t)45;
+    g_target = (g_target == (int8_t)25)
+                   ? (int8_t)-25
+                   : (int8_t)25;
 
     osDelay(3000);
   }
@@ -187,19 +187,18 @@ void StartPIDTask(void *argument)
 {
   // Initialize ADRC.
 
-  PositionController_Init(__HAL_TIM_GET_COUNTER(&htim2));
+  PositionController_Init((int32_t)__HAL_TIM_GET_COUNTER(&htim2));
 
   for (;;)
   {
-    // Get float output from ADRC.
     float u = PositionController_Update(
         g_target,
-        __HAL_TIM_GET_COUNTER(&htim2)
+        (int32_t)__HAL_TIM_GET_COUNTER(&htim2)
     );
 
     Motor_SetOutput(u);
 
-    osDelay(500);
+    osDelay(10);
   }
 
 }

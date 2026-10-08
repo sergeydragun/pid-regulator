@@ -14,7 +14,7 @@
 #define POSITION_CONTROLLER_OUTPUT_MIN   (-100.0f)
 #define POSITION_CONTROLLER_OUTPUT_MAX     100.0f
 
-void PositionController_Init(float initial_pos)
+void PositionController_Init(int32_t initial_pos)
 {
     float dt = 0.010f; // 10 мс
     float wc = 10.0f;  // Полоса регулятора
@@ -24,13 +24,13 @@ void PositionController_Init(float initial_pos)
     float kp = wc * wc;
     float kd = 2.0f * wc;
 
-    ADRC_Init(g_adrc, wo, b, kp, kd, dt, initial_pos);
+    ADRC_Init(&g_adrc, wo, b, kp, kd, dt, initial_pos);
     Motor_Init();
 }
 
-float PositionController_Update(float target, float position)
+float PositionController_Update(float target, int32_t position)
 {
-    float u_fb = ADRC_Update(g_adrc, target, position);
+    float u_fb = ADRC_Update(&g_adrc, target, position);
 
     const float u =
         u_fb;

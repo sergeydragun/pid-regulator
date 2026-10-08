@@ -17,9 +17,9 @@ static uint32_t output_to_ccr(float output)
         output = -output;
     }
 
-    if (output > 100.0f)
+    if (output > 83.0f)
     {
-        output = 100.0f;
+        output = 83.0f;
     }
 
     uint32_t arr = __HAL_TIM_GET_AUTORELOAD(&htim1);

@@ -4,6 +4,7 @@
 
 #ifndef PID_REGULATOR_ADRC_H
 #define PID_REGULATOR_ADRC_H
+#include <stdint.h>
 
 typedef struct
 {
@@ -25,7 +26,7 @@ typedef struct
     float beta3;
 } ADRC_t;
 
-void ADRC_Init(volatile ADRC_t *adrc, float wo, float b, float kp, float kd, float dt, float initial_pos);
-float ADRC_Update(volatile ADRC_t *adrc, float target, float current_pos);
+void ADRC_Init(volatile ADRC_t *adrc, float wo, float b, float kp, float kd, float dt, int32_t initial_pos);
+float ADRC_Update(volatile ADRC_t *adrc, float target, int32_t current_pos);
 
 #endif //PID_REGULATOR_ADRC_H

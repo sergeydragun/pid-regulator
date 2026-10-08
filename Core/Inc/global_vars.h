@@ -13,6 +13,6 @@ extern volatile int32_t g_min_pos;
 
 extern volatile float g_target;
 
-extern volatile ADRC_t*  g_adrc;
+extern volatile ADRC_t  g_adrc;
 
 #endif //PID_REGULATOR_GLOBAL_VARS_H
