@@ -6,8 +6,8 @@
 #define PID_REGULATOR_POSITION_CONTROLLER_H
 #include <stdint.h>
 
-void PositionController_init(void);
+void PositionController_Init(float initial_pos);
 
-float PositionController_update(int32_t target, int32_t position);
+float PositionController_Update(float target, float position);
 
 #endif //PID_REGULATOR_POSITION_CONTROLLER_H

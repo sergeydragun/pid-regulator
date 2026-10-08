@@ -2,7 +2,7 @@
 // Created by sergey on 10/1/26.
 //
 
-static float clamp(
+float clamp(
     float value,
     float min,
     float max

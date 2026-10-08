@@ -1,5 +1,3 @@
-#include "pid_calculator.h"
-
 #include <stdint.h>
 
 typedef struct
@@ -36,7 +34,7 @@ void PID_Init(float kp,
     pid.output_min = output_min;
     pid.output_max = output_max;
 
-    PID_Reset();
+    //PID_Reset();
 }
 
 

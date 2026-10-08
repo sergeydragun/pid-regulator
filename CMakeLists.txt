@@ -28,6 +28,7 @@ set(CMAKE_SYSTEM_NAME Generic)
 
 # Core project settings
 project(${CMAKE_PROJECT_NAME})
+
 message(STATUS "Toolchain file: ${CMAKE_TOOLCHAIN_FILE}")
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
@@ -37,22 +38,18 @@ enable_language(C ASM)
 add_executable(${CMAKE_PROJECT_NAME}
         Core/Inc/global_vars.h
         Core/Src/global_vars.c
-        "Core/Src/pid/pid_calculator.c"
-        "Core/Src/pid/pid_calculator.h"
-        Core/Src/hardware/motor.c
-        Core/Src/hardware/motor.h
-        Core/Src/hardware/encoder.c
-        Core/Src/hardware/encoder.h
-        Core/Src/calibration/calibration.c
-        Core/Src/calibration/calibration.h
-        Core/Src/calibration/calibration_logger.c
-        Core/Src/calibration/calibration_logger.h
-        Core/Src/calibration/static_compensation.c
-        Core/Src/calibration/static_compensation.h
-        Core/Src/pid/position_controller.c
-        Core/Src/pid/position_controller.h
+        "Core/Src/control_layer/pid_calculator.c"
+        "Core/Src/control_layer/pid_calculator.h"
+        Core/Src/hardware_layer/motor.c
+        Core/Src/hardware_layer/motor.h
+        Core/Src/logger/logger.c
+        Core/Src/logger/logger.h
+        Core/Src/application_layer/position_controller.c
+        Core/Src/application_layer/position_controller.h
         Core/Inc/global_funcs.h
-        Core/Src/global_funcs.c)
+        Core/Src/global_funcs.c
+        Core/Src/control_layer/adrc.c
+        Core/Src/control_layer/adrc.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
