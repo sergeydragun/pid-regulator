@@ -174,20 +174,51 @@ void StartPIDTarget(void *argument)
 {
   for (;;)
   {
-    g_target = (g_target == (int8_t)25)
-                   ? (int8_t)-25
-                   : (int8_t)25;
+    g_target = (g_target == (int8_t)50)
+                   ? (int8_t)-50
+                   : (int8_t)50;
 
     osDelay(3000);
   }
 
 }
 
+// Временный тест разомкнутого контура: импульсы ±u, лог "OL|u|pos" каждые 10 мс.
+#define MOTOR_OPEN_LOOP_TEST 0
+
+#if MOTOR_OPEN_LOOP_TEST
+static void OpenLoopStep(float u, uint32_t ms)
+{
+  Motor_SetOutput(u);
+  for (uint32_t t = 0; t < ms; t += 10)
+  {
+    Log_Write("OL|%d|%ld", (int)u, (long)(int32_t)__HAL_TIM_GET_COUNTER(&htim2));
+    osDelay(10);
+  }
+}
+#endif
+
 void StartPIDTask(void *argument)
 {
+#if MOTOR_OPEN_LOOP_TEST
+  Motor_Init();
+  static const float levels[] = {55.0f, 60.0f, 65.0f, 70.0f, 75.0f, 80.0f};
+  for (;;)
+  {
+    for (uint32_t i = 0; i < sizeof(levels) / sizeof(levels[0]); ++i)
+    {
+      OpenLoopStep(0.0f, 700);
+      OpenLoopStep(levels[i], 200);
+      OpenLoopStep(0.0f, 700);
+      OpenLoopStep(-levels[i], 200);
+    }
+  }
+#endif
   // Initialize ADRC.
 
-  PositionController_Init((int32_t)__HAL_TIM_GET_COUNTER(&htim2));
+  PositionController_Init();
+
+  uint32_t wake_tick = osKernelGetTickCount();
 
   for (;;)
   {
@@ -198,7 +229,9 @@ void StartPIDTask(void *argument)
 
     Motor_SetOutput(u);
 
-    osDelay(10);
+    // Строгий период: osDelay отсчитывал бы от конца итерации.
+    wake_tick += POSITION_CONTROLLER_PERIOD_MS;
+    osDelayUntil(wake_tick);
   }
 
 }
